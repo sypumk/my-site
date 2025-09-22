@@ -1,0 +1,703 @@
+    <!DOCTYPE html>
+    <html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>个人简历</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <style>
+            /* 全局样式 */
+            :root {
+                --bg-color: #0a0e17; /* 深蓝黑色背景，更具科技感 */
+                --card-bg: #141c2e; /* 稍微带蓝色的深色卡片背景 */
+                --text-color: #e2e8f0; /* 偏蓝的白色文本，减少刺眼感 */
+                --primary-color: #f27070; /* 青蓝色，赛博朋克风格 */
+                --accent-color: #d5dcfa; /* 紫色点缀，增加科技感 */
+                --border-color: #040805; /* 深蓝色边框 */
+                --shadow-color: rgba(0, 0, 0, 0.7); /* 更深的阴影 */
+                --hover-shadow: rgba(5, 237, 156, 0.3); /* 悬停时的青色阴影 */
+                --pulse-color: rgba(121, 40, 202, 0.5); /* 紫色脉冲动画 */
+            }
+
+            body {
+                font-family: 'Inter', sans-serif;
+                background-color: var(--bg-color);
+                color: var(--text-color);
+                margin: 0;
+                padding: 20px;
+                line-height: 1.6;
+                overflow-x: hidden; /* 防止水平滚动 */
+            }
+
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                display: grid;
+                gap: 20px;
+                grid-template-columns: 1fr;
+            }
+
+            @media (min-width: 768px) {
+                .container {
+                    grid-template-columns: 2fr 1fr; /* 桌面端两列布局 */
+                }
+            }
+
+            /* 卡片基础样式 */
+            .card {
+                background-color: var(--card-bg);
+                border-radius: 12px;
+                padding: 30px;
+                box-shadow: 0 8px 16px var(--shadow-color);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                border: 1px solid var(--border-color);
+                position: relative;
+                overflow: hidden;
+                opacity: 0; /* 初始隐藏，用于渐入动画 */
+                transform: translateY(20px); /* 初始位移，用于渐入动画 */
+                animation: fadeIn 0.8s forwards; /* 渐入动画 */
+            }
+
+            /* 呼吸感边框 - 赛博朋克风格 */
+            .card::before {
+                content: '';
+                position: absolute;
+                top: -2px;
+                left: -2px;
+                right: -2px;
+                bottom: -2px;
+                background: linear-gradient(45deg, var(--primary-color), var(--accent-color), var(--primary-color));
+                background-size: 400% 400%;
+                z-index: -1;
+                border-radius: 14px;
+                filter: blur(8px);
+                animation: breathingBorder 8s infinite alternate;
+                opacity: 0.4; /* 增强边框亮度 */
+                box-shadow: 0 0 20px rgba(0, 184, 212, 0.2); /* 添加外部光晕 */
+            }
+
+            /* 卡片悬停效果 */
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 12px 24px var(--hover-shadow);
+            }
+
+            h1, h2, h3 {
+                color: var(--primary-color);
+                margin-top: 0;
+                margin-bottom: 20px;
+                text-align: center;
+                letter-spacing: 1px;
+                text-shadow: 0 0 5px rgba(0, 184, 212, 0.3);
+                position: relative;
+                display: inline-block;
+            }
+            
+            h2::after {
+                content: '';
+                position: absolute;
+                bottom: -5px;
+                left: 50%;
+                width: 50px;
+                height: 2px;
+                background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+                transform: translateX(-50%);
+            }
+
+            p {
+                margin-bottom: 15px;
+            }
+
+            /* 个人信息 */
+            .personal-info h2 {
+                font-size: 2.5em;
+                margin-bottom: 10px;
+                text-align: left;
+            }
+
+            .personal-info p {
+                font-size: 1.1em;
+                color: var(--text-color);
+            }
+
+            .personal-info .name {
+                font-size: 3em;
+                font-weight: 700;
+                color: var(--accent-color);
+                text-shadow: 0 0 10px var(--accent-color), 0 0 30px rgba(121, 40, 202, 0.3); /* 增强霓虹效果 */
+                margin-bottom: 5px;
+                letter-spacing: 1px; /* 增加字母间距，提升科技感 */
+            }
+
+            .personal-info .title {
+                font-size: 1.5em;
+                color: var(--primary-color);
+                margin-bottom: 20px;
+            }
+
+            /* 技能标签 */
+            .skills-tags {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 20px;
+            }
+
+            .skill-tag {
+                background-color: var(--primary-color);
+                color: var(--bg-color);
+                padding: 8px 15px;
+                border-radius: 20px;
+                font-size: 0.9em;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                box-shadow: 0 0 10px rgba(0, 184, 212, 0.2);
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .skill-tag::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+                transform: rotate(30deg);
+                transition: all 0.5s ease;
+                opacity: 0;
+            }
+
+            .skill-tag:hover {
+                background-color: var(--accent-color);
+                transform: scale(1.05);
+                box-shadow: 0 0 15px rgba(121, 40, 202, 0.4);
+            }
+            
+            .skill-tag:hover::before {
+                opacity: 1;
+                left: 100%;
+            }
+
+            /* 时间线 */
+            .timeline {
+                position: relative;
+                padding-left: 30px;
+                margin-top: 20px;
+            }
+
+            .timeline::before {
+                content: '';
+                position: absolute;
+                left: 10px;
+                top: 0;
+                bottom: 0;
+                width: 2px;
+                background-color: var(--border-color);
+            }
+
+            .timeline-item {
+                margin-bottom: 30px;
+                position: relative;
+                padding-left: 20px;
+            }
+
+            .timeline-item::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 5px;
+                width: 12px;
+                height: 12px;
+                background-color: var(--primary-color);
+                border-radius: 50%;
+                border: 2px solid var(--card-bg);
+                box-shadow: 0 0 0 3px var(--primary-color);
+            }
+
+            .timeline-item h3 {
+                font-size: 1.3em;
+                margin-bottom: 5px;
+                color: var(--accent-color);
+                text-align: left;
+            }
+
+            .timeline-item p {
+                font-size: 0.95em;
+                color: var(--text-color);
+            }
+
+            .timeline-item .date {
+                font-size: 0.85em;
+                color: #aaa;
+                margin-bottom: 5px;
+            }
+
+            /* AI聊天机器人区域 */
+            .ai-chatbot-section {
+                grid-column: 1 / -1; /* 占据整行 */
+                text-align: center;
+            }
+
+            .ai-chatbot-section h2 {
+                font-size: 2em;
+                margin-bottom: 15px;
+            }
+
+            .ai-intro {
+                background-color: var(--card-bg);
+                border-radius: 12px;
+                padding: 30px;
+                box-shadow: 0 8px 16px var(--shadow-color);
+                border: 1px solid var(--border-color);
+                margin-bottom: 20px;
+                opacity: 0;
+                transform: translateY(20px);
+                animation: fadeIn 0.8s forwards 0.2s; /* 延迟渐入 */
+            }
+
+            .ai-intro p {
+                font-size: 1.1em;
+                color: var(--text-color);
+                margin-bottom: 20px;
+            }
+
+            .ai-intro button {
+                background-color: var(--primary-color);
+                color: var(--bg-color);
+                border: none;
+                padding: 15px 30px;
+                border-radius: 30px;
+                font-size: 1.1em;
+                font-weight: 700;
+                cursor: pointer;
+                transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+                box-shadow: 0 4px 8px rgba(0, 188, 212, 0.3);
+            }
+
+            .ai-intro button:hover {
+                background-color: var(--accent-color);
+                transform: translateY(-3px);
+                box-shadow: 0 6px 12px rgba(255, 235, 59, 0.4);
+            }
+
+            .chatbot-container {
+                background-color: var(--card-bg);
+                border-radius: 12px;
+                padding: 20px;
+                box-shadow: 0 8px 16px var(--shadow-color);
+                border: 1px solid var(--border-color);
+                height: 400px; /* 模拟聊天界面高度 */
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+                align-items: center;
+                position: relative;
+                overflow: hidden;
+                opacity: 0;
+                transform: translateY(20px);
+                animation: fadeIn 0.8s forwards 0.4s; /* 延迟渐入 */
+            }
+
+            .chatbot-container p {
+                text-align: center;
+                font-style: italic;
+                color: #aaa;
+            }
+
+            /* 聊天机器人模拟界面 */
+            .chat-messages {
+                width: 100%;
+                height: calc(100% - 60px); /* 留出输入框空间 */
+                overflow-y: auto;
+                padding: 10px;
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .message {
+                max-width: 80%;
+                padding: 10px 15px;
+                border-radius: 15px;
+                word-wrap: break-word;
+            }
+
+            .user-message {
+                align-self: flex-end;
+                background-color: var(--primary-color);
+                color: var(--bg-color);
+                border-bottom-right-radius: 2px;
+            }
+
+            .ai-message {
+                align-self: flex-start;
+                background-color: #3a3a3a;
+                color: var(--text-color);
+                border-bottom-left-radius: 2px;
+            }
+
+            .chat-input {
+                width: calc(100% - 20px);
+                display: flex;
+                gap: 10px;
+                padding: 10px;
+                border-top: 1px solid var(--border-color);
+            }
+
+            .chat-input input {
+                flex-grow: 1;
+                background-color: #1a2235; /* 更深的蓝黑色，符合极客风格 */
+                border: 1px solid var(--border-color);
+                border-radius: 20px;
+                padding: 10px 15px;
+                color: var(--text-color);
+                outline: none;
+                box-shadow: 0 0 5px rgba(0, 184, 212, 0.2); /* 微弱的青色光晕 */
+            }
+
+            .chat-input button {
+                background-color: var(--primary-color);
+                color: var(--bg-color);
+                border: none;
+                border-radius: 20px;
+                padding: 10px 15px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 0 10px rgba(0, 184, 212, 0.3);
+            }
+            
+            .chat-input button::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                transition: all 0.5s ease;
+            }
+            
+            .chat-input button:hover {
+                background-color: var(--accent-color);
+                box-shadow: 0 0 15px rgba(121, 40, 202, 0.5);
+            }
+            
+            .chat-input button:hover::before {
+                left: 100%;
+            }
+
+            .chat-input button:hover {
+                background-color: var(--accent-color);
+            }
+
+            /* 动画 */
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes breathingBorder {
+                0% {
+                    background-position: 0% 50%;
+                    filter: blur(8px) hue-rotate(0deg);
+                }
+                50% {
+                    background-position: 100% 50%;
+                    filter: blur(10px) hue-rotate(45deg);
+                }
+                100% {
+                    background-position: 0% 50%;
+                    filter: blur(8px) hue-rotate(0deg);
+                }
+            }
+
+            @keyframes pulse {
+                0% {
+                    box-shadow: 0 0 0 0 var(--pulse-color);
+                }
+                50% {
+                    box-shadow: 0 0 0 15px rgba(121, 40, 202, 0.4);
+                }
+                70% {
+                    box-shadow: 0 0 0 20px rgba(0, 184, 212, 0.2);
+                }
+                100% {
+                    box-shadow: 0 0 0 0 rgba(0, 184, 212, 0);
+                }
+            }
+
+            .pulse-animation {
+                animation: pulse 2s infinite;
+            }
+
+            /* Dify Chatbot 样式（如果使用） */
+            dify-chatbot {
+                display: block;
+                width: 100%;
+                height: 100%;
+                border-radius: 12px;
+                overflow: hidden;
+            }
+        .glitch-name {
+        font-family: 'Share Tech Mono', monospace;
+        position: relative;
+        color: var(--accent-color);
+        font-weight: bold;
+        display: inline-block;
+        text-shadow:
+            2px 2px var(--primary-color),
+            -2px -2px rgba(0, 184, 212, 0.6);
+        transform: translate(0, 0);
+        transition: transform 0.05s ease;
+        }
+
+        /* 鼠标悬浮错位效果上下两层 */
+        .glitch-name::before,
+        .glitch-name::after {
+        content: attr(data-text);
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        overflow: hidden;
+        pointer-events: none;
+        }
+
+        .glitch-name::before {
+        animation: glitchTop 1s infinite linear alternate-reverse;
+        color: #022713;
+        clip-path: inset(0 0 45% 0);
+        z-index: -1;
+        }
+
+        .glitch-name::after {
+        animation: glitchBottom 1.2s infinite linear alternate-reverse;
+        color: #000000;
+        clip-path: inset(55% 0 0 0);
+        z-index: -1;
+
+        /* CRT 扫描线效果 */
+        background: repeating-linear-gradient(
+            to bottom,
+            rgba(0, 255, 255, 0.05),
+            rgba(0, 255, 255, 0.05) 1px,
+            transparent 1px,
+            transparent 2px
+        );
+        mix-blend-mode: overlay;
+        }
+
+        /* glitch 上下动画 */
+        @keyframes glitchTop {
+        0% { transform: translate(0px, 0px); }
+        20% { transform: translate(-2px, -2px); }
+        40% { transform: translate(-2px, 2px); }
+        60% { transform: translate(2px, -2px); }
+        80% { transform: translate(2px, 2px); }
+        100% { transform: translate(0px, 0px); }
+        }
+
+        @keyframes glitchBottom {
+        0% { transform: translate(0px, 0px); }
+        20% { transform: translate(2px, 2px); }
+        40% { transform: translate(2px, -2px); }
+        60% { transform: translate(-2px, 2px); }
+        80% { transform: translate(-2px, -2px); }
+        100% { transform: translate(0px, 0px); }
+        }
+
+        /* 包裹整个效果，加点闪烁感 */
+        .glitch-wrapper {
+        position: relative;
+        display: inline-block;
+        filter: contrast(1.1) brightness(1.2) saturate(1.3);
+        animation: flicker 2s infinite;
+        }
+
+        @keyframes flicker {
+        0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+            opacity: 1;
+        }
+        20%, 22%, 24%, 55% {
+            opacity: 0.92;
+        }
+        }
+
+
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <!-- 个人信息卡片 -->
+            <section class="card personal-info" style="animation-delay: 0s;">
+                <div class="glitch-wrapper">
+                    <p class="name glitch-name" id="glitchName">秦贯洲</p>
+                </div>
+                <p class="title">软件工程师 / 全栈开发者</p>
+                <h2>个人简介</h2>
+                <p>一位充满热情和创造力的软件工程师，对AI技术充满热情，志在构建高性能、用户友好的Web应用程序，并致力于通过技术解决实际问题。对新技术充满好奇心，乐于学习和探索。</p>
+
+                <h2>专业技能</h2>
+                <div class="skills-tags">
+                    <span class="skill-tag">JavaScript</span>
+                    <span class="skill-tag">React</span>
+                    <span class="skill-tag">Node.js</span>
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">MySQL</span>
+                    <span class="skill-tag">HTML5</span>
+                    <span class="skill-tag">CSS3</span>
+                    <span class="skill-tag">Tailwind CSS</span>
+                    <span class="skill-tag">MongoDB</span>
+                    <span class="skill-tag">SQL</span>
+                    <span class="skill-tag">Git</span>
+                    <span class="skill-tag">Docker</span>
+                    <span class="skill-tag">云计算 (AWS/Azure)</span>
+                </div>
+            </section>
+
+            <!-- 工作经历和教育背景卡片 -->
+            <section class="card" style="animation-delay: 0.1s;">
+                <h2>工作经历</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h3>智能制造工程师 - TOP10制造公司</h3>
+                        <p class="date">2024 - 2025</p>
+                        <ul>
+                            <li>参与多个Web项目的全栈开发，包括需求分析、设计、编码和测试。</li>
+                            <li>SEO优化</li>
+                            <li>负责数据库设计和优化 (MongoDB, MySQL)。</li>
+                            <li>独立完成开源项目音频文本相互转化LLM的开发。</li>
+                            
+                        </ul>
+                        <h4>项目链接</h4>
+                        <ul>
+                            <li><a href="https://voice.sinocutter.xyz" target="_blank">https://voice.sinocutter.xyz</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h2>教育背景</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h3>计算机科学 - 华东交通大学理工学院</h3>
+                        <p class="date">2020-2024</p>
+                        <ul>
+                            <li>Cursor Augment CodeX Trae</li>
+                            <li>CET6/Google Gemini Certified Educator</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI聊天机器人区域 -->
+            <section class="ai-chatbot-section">
+                <div class="ai-intro">
+                    <h2>与我的AI助手互动</h2>
+                    <p>这是一个由AI驱动的智能助手，它可以回答关于我的简历、项目经验和技能的任何问题。点击下方按钮开始对话！</p>
+                    <button id="startChatButton" class="pulse-animation">开始对话</button>
+                </div>
+
+                <div id="chatbotInterface" class="chatbot-container" style="display: none;">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="ai-message message">你好！我是秦贯洲的AI助手。有什么想了解的吗？</div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="chatInput" placeholder="输入你的问题...">
+                        <button id="sendMessageButton">发送</button>
+                    </div>
+                    <p>（这是一个模拟的聊天界面，实际应用中将为Dify Chatbot，因消耗Token暂不对外开放）</p>
+                    <!-- Dify Chatbot 嵌入区域（实际使用时取消注释并替换APP ID） -->
+                    <!-- <dify-chatbot
+                        id="dify-chatbot-widget"
+                        app-id="YOUR_DIFY_APP_ID"
+                        theme="dark"
+                        layout="full"
+                        config='{"features":{"suggestedQuestions":{"enabled":true}}}'
+                    ></dify-chatbot> -->
+                </div>
+            </section>
+        </div>
+
+        <script>
+            // 渐入动画的延迟
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+
+            // AI聊天机器人显示/隐藏逻辑
+            const startChatButton = document.getElementById('startChatButton');
+            const chatbotInterface = document.getElementById('chatbotInterface');
+            const chatMessages = document.getElementById('chatMessages');
+            const chatInput = document.getElementById('chatInput');
+            const sendMessageButton = document.getElementById('sendMessageButton');
+
+            startChatButton.addEventListener('click', () => {
+                chatbotInterface.style.display = 'flex';
+                startChatButton.style.display = 'none'; // 隐藏开始对话按钮
+                // 移除脉冲动画，因为它已经完成了引导作用
+                startChatButton.classList.remove('pulse-animation');
+            });
+
+            // 模拟聊天功能
+            sendMessageButton.addEventListener('click', sendMessage);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            function sendMessage() {
+                const messageText = chatInput.value.trim();
+                if (messageText) {
+                    // 添加用户消息
+                    const userMessageDiv = document.createElement('div');
+                    userMessageDiv.classList.add('message', 'user-message');
+                    userMessageDiv.textContent = messageText;
+                    chatMessages.appendChild(userMessageDiv);
+
+                    chatInput.value = ''; // 清空输入框
+                    chatMessages.scrollTop = chatMessages.scrollHeight; // 滚动到底部
+
+                    // 模拟AI回复
+                    setTimeout(() => {
+                        const aiMessageDiv = document.createElement('div');
+                        aiMessageDiv.classList.add('message', 'ai-message');
+                        aiMessageDiv.textContent = "感谢你的提问！这是一个模拟的回复。在实际应用中，这里会连接到真正的AI模型。";
+                        chatMessages.appendChild(aiMessageDiv);
+                        chatMessages.scrollTop = chatMessages.scrollHeight; // 滚动到底部
+                    }, 1000); // 1秒后回复
+                }
+            }
+            // 引入鼠标移动事件
+            const glitchName = document.getElementById('glitchName');
+            glitchName.setAttribute('data-text', glitchName.textContent);
+
+            document.addEventListener('mousemove', e => {
+            const { clientX: x, clientY: y } = e;
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            const offsetX = (x - centerX) / 100;
+            const offsetY = (y - centerY) / 100;
+            glitchName.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+            });
+
+
+            // Dify Chatbot 脚本（如果使用）
+            // 确保在body结束标签前引入Dify的SDK脚本
+            // <script src="https://udify.app/embed.min.js" id="dify-chatbot-embed" data-app-id="YOUR_DIFY_APP_ID"></script>
+        </script>
+    </body>
+    </html>
